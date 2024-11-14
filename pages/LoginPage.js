@@ -1,18 +1,38 @@
-import React from 'react';
-import { Text, SafeAreaView, StyleSheet, Button, ImageBackground, View } from 'react-native';
-import { Card } from 'react-native-paper';
-import AssetExample from '../components/AssetExample';
+import React, { useState } from 'react';
+import { Text, SafeAreaView, StyleSheet, Button, ImageBackground, View, TextInput, Image } from 'react-native';
 import UVv_Campus from '../assets/UVv_Campus.jpg';
+import UVv_Logo from '../assets/UVV.png';
+import {supabase} from  '../Utils/supabase'
 
 export default function LoginPage({ navigation }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
     <ImageBackground style={styles.background} source={UVv_Campus}>
       <SafeAreaView style={styles.container}>
-        <Text style={styles.paragraph}></Text>
-        <Card>
-          <AssetExample />
-        </Card>
-        
+        <Image style={styles.logo} source={UVv_Logo} />
+       
+
+      
+        <TextInput
+          style={styles.textInput}
+          onChangeText={setUsername}
+          value={username}
+          placeholder="Username ou email"
+          placeholderTextColor="#999"
+        />
+
+      
+        <TextInput
+          style={styles.textInput}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+          placeholderTextColor="#999"
+          secureTextEntry={true} 
+        />
+
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
             <Button 
@@ -52,19 +72,36 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   container: {
-    width: '80%',
+    width: '85%',
     maxWidth: 400,
     padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    backgroundColor: '#ffffffcc', 
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 5, 
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
+  logo: {
+    width: 100,  
+    height: 100,
+    marginBottom: 20,  
+  },
+  title: {
+    fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
+    color: '#021E73',
+    marginBottom: 20,
+  },
+  textInput: {
+    height: 40,
+    borderColor: '#021E73',
+    borderWidth: 1,
+    width: '80%',  
+    paddingHorizontal: 10,
+    marginBottom: 20,  
+    borderRadius: 8,
+    color: '#333',
+    backgroundColor: '#f5f5f5',
   },
   buttonContainer: {
     marginTop: 20,
@@ -73,7 +110,6 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: 10,
-    width: '50%',
+    width: '60%',
   },
 });
-

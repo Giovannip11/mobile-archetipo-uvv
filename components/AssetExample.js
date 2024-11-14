@@ -21,6 +21,7 @@ export default function AssetExample() {
         value={number}
         keyboardType="numeric"
         placeholder="Password"
+        secureTextEntry={true}
       />
     </SafeAreaView>
   );

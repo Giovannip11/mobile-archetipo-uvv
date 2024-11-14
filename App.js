@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Button, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {supabase} from './Utils/supabase'
 import LoginPage from './pages/LoginPage';
 import ForgetPassword from './pages/ForgetPassword';
 import RegisterPage from './pages/RegisterPage';

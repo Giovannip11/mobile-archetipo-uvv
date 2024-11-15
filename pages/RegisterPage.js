@@ -5,21 +5,17 @@ import UVv_Logo from '../assets/UVV.png';
 import { supabase } from '../Utils/supabase';
 
 export default function RegisterPage({ navigation }) {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
- 
   const handleSignUp = async () => {
-    // Verifica se as senhas são iguais
     if (password !== confirmPassword) {
       Alert.alert('Erro', 'As senhas não coincidem.');
       return;
     }
 
-    // Verifica se todos os campos estão preenchidos
-    if (!email || !password || !username) {
+    if (!email || !password) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
@@ -28,39 +24,28 @@ export default function RegisterPage({ navigation }) {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: { username },
-        },
       });
 
-      // Trata o erro
       if (error) {
         console.error('Erro no cadastro:', error.message);
         Alert.alert('Erro', error.message);
         return;
       }
 
-      // Sucesso no cadastro
       Alert.alert('Sucesso', 'Verifique seu e-mail para confirmar sua conta.');
-      navigation.navigate('Main');
+      navigation.navigate('Login');
     } catch (error) {
       console.error('Erro inesperado:', error);
       Alert.alert('Erro', 'Ocorreu um erro inesperado. Tente novamente.');
     }
   };
+
   return (
     <ImageBackground style={styles.background} source={UVv_Campus}>
       <SafeAreaView style={styles.container}>
         <Image style={styles.logo} source={UVv_Logo} />
         <Text style={styles.title}>Crie sua Conta</Text>
 
-        <TextInput
-          style={styles.textInput}
-          onChangeText={setUsername}
-          value={username}
-          placeholder="Username"
-          placeholderTextColor="#999"
-        />
         <TextInput
           style={styles.textInput}
           onChangeText={setEmail}

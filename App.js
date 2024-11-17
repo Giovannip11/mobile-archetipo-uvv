@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import ForgetPassword from './pages/ForgetPassword';
 import RegisterPage from './pages/RegisterPage';
 import MainPage from './pages/MainPage';
+import CreateGroup from './pages/CreateGroup';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
         <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="Main" component={MainPage} />
+        <Stack.Screen name="Create" component={CreateGroup} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, StyleSheet, FlatList, View, Alert, Button, ImageBackground, TouchableOpacity } from 'react-native';
+import { Text, SafeAreaView, StyleSheet, FlatList, View, Alert, ImageBackground, TouchableOpacity } from 'react-native';
 import { supabase } from '../Utils/supabase';
 import UVv_Campus from '../assets/UVv_Campus.jpg';
 
@@ -15,34 +15,46 @@ export default function Main({ navigation }) {
           id,
           tema,
           diasApresentacao,
-          integrantes
+          integrantes,
+          IntegrantesGrupo (
+            id,
+            Alunos:Alunos (
+              nome,
+              curso
+            )
+          )
         `);
-
+  
       if (error) {
         console.error('Erro ao buscar grupos:', error.message);
         Alert.alert('Erro', 'Não foi possível buscar os grupos.');
         return;
       }
-
+  
       setGroups(data);
     } catch (error) {
       console.error('Erro inesperado:', error);
       Alert.alert('Erro', 'Ocorreu um erro inesperado. Tente novamente.');
     }
   };
+  
 
   // Buscar grupos ao carregar a tela
   useEffect(() => {
     fetchGroups();
   }, []);
 
+  // Renderizar cada grupo e seus integrantes
   const renderItem = ({ item }) => (
     <View style={styles.groupContainer}>
       <Text style={styles.groupName}>Tema: {item.tema}</Text>
       <Text>Data de Apresentação: {item.diasApresentacao}</Text>
-      <Text>Integrantes:</Text>
-      {item.integrantes && item.integrantes.map((member, index) => (
-        <Text key={index} style={styles.memberName}>{member}</Text>
+      <Text style={styles.subTitle}>Integrantes:</Text>
+      {item.IntegrantesGrupo && item.IntegrantesGrupo.map((integrante, index) => (
+        <View key={index} style={styles.memberContainer}>
+          <Text style={styles.memberName}>Nome: {integrante.Alunos.nome}</Text>
+          <Text style={styles.memberCourse}>Curso: {integrante.Alunos.curso}</Text>
+        </View>
       ))}
     </View>
   );
@@ -74,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: 'rgba(0,0,0,0.5)', // Adiciona um fundo semi-transparente
+    backgroundColor: 'rgba(0,0,0,0.5)', // Fundo semi-transparente
   },
   groupContainer: {
     backgroundColor: '#fff',
@@ -88,9 +100,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#021E73',
   },
+  subTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  memberContainer: {
+    marginTop: 5,
+    paddingLeft: 10,
+  },
   memberName: {
     fontSize: 16,
-    marginTop: 5,
+    color: '#555',
+  },
+  memberCourse: {
+    fontSize: 14,
+    color: '#888',
   },
   createButton: {
     backgroundColor: '#34C759',

@@ -12,7 +12,11 @@ export default function CreateGroup({ navigation }) {
   const addMember = () => {
     setMembers([...members, { name: '', course: '', topic: '' }]);
   };
-
+  const formatDate = (date) => {
+    const [day, month, year] = date.split('/');
+    return `${year}-${month}-${day}`;
+  };
+  
 
   const removeMember = (index) => {
     const updatedMembers = members.filter((_, i) => i !== index);
@@ -33,48 +37,22 @@ export default function CreateGroup({ navigation }) {
       return;
     }
   
-    try {
-      // 1. Inserir o grupo na tabela 'gruposInova'
-      const { data: groupData, error: groupError } = await supabase
-        .from('gruposInova')
-        .insert([{
-          tema: groupName,
-          diasApresentacao: presentationDate,
-          integrantes: JSON.stringify(members.map(m => m.name)), // Guardando nomes dos integrantes como texto
-        }])
-        .select(); // Usando select() para retornar o grupo criado
+    // Converter a data para o formato correto
+    const formattedDate = formatDate(presentationDate);
   
-      if (groupError) {
-        console.error('Erro ao criar grupo:', groupError.message);
+    try {
+      const { data, error } = await supabase.from('gruposInova').insert([
+        {
+          tema: groupName,
+          diasApresentacao: formattedDate,
+          integrantes: members.map(m => m.name), // Considerando que 'members' é um array de objetos com 'name'
+        },
+      ]);
+  
+      if (error) {
+        console.error('Erro ao criar grupo:', error.message);
         Alert.alert('Erro', 'Não foi possível criar o grupo.');
         return;
-      }
-  
-      const groupId = groupData[0]?.id;
-  
-      // 2. Inserir os integrantes na tabela 'Alunos' e associar na tabela 'IntegrantesGrupo'
-      for (const member of members) {
-        // Inserir aluno
-        const { data: studentData, error: studentError } = await supabase
-          .from('Alunos')
-          .insert([{
-            curso: member.course,
-            idGrupo: groupId
-          }])
-          .select(); 
-  
-        if (studentError) {
-          console.error('Erro ao adicionar aluno:', studentError.message);
-          continue;
-        }
-  
-        const studentId = studentData[0]?.id;
-  
-        // Associar aluno ao grupo
-        await supabase.from('IntegrantesGrupo').insert([{
-          idGrupo: groupId,
-          idAluno: studentId,
-        }]);
       }
   
       Alert.alert('Sucesso', 'Grupo criado com sucesso!');
@@ -84,7 +62,6 @@ export default function CreateGroup({ navigation }) {
       Alert.alert('Erro', 'Ocorreu um erro inesperado. Tente novamente.');
     }
   };
-  
   
 
   return (
